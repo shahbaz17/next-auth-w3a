@@ -36,7 +36,7 @@ export default function UserInfo({ session }: UserInfoProps) {
         if (!session?.idToken) return;
         const { payload } = decodeToken(session.idToken);
         const provider = await web3auth.connect({
-          verifier: "w3a-sfa-web-google",
+          verifier: "next-auth-w3a",
           verifierId: (payload as any).email,
           idToken: session.idToken,
         });
