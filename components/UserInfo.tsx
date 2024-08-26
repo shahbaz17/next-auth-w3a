@@ -62,8 +62,8 @@ export default function UserInfo({ session }: UserInfoProps) {
               <Image
                 src={session.user.image}
                 alt="Profile picture"
-                width={120}
-                height={120}
+                width={140}
+                height={140}
                 className="rounded-full border-4 border-blue-500"
               />
             )}
