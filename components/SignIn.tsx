@@ -13,7 +13,7 @@ export default function SignIn() {
         type="submit"
         className="bg-blue-500 text-white p-4 rounded-md text-lg hover:bg-blue-600 transition-colors"
       >
-        Signin with Google
+        Sign in with Google
       </button>
     </form>
   );
