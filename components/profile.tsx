@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import { Session } from "next-auth";
-import { handleSignOut } from "@/actions";
+
 import { web3auth, decodeToken } from "@/lib/web3auth";
 import { useEffect, useState } from "react";
-import Spinner from "@/components/Spinner";
+import Spinner from "@/components/spinner";
+import SignOut from "@/components/auth/signout-button";
 
 type UserInfoProps = {
   session: Session | null;
@@ -50,9 +51,9 @@ export default function UserInfo({ session }: UserInfoProps) {
   if (!session) return null;
 
   return (
-    <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8 max-w-sm w-full mx-auto">
+    <div className="bg-white dark:bg-zinc-800/30 shadow-lg rounded-lg p-8 max-w-md w-full mx-auto mt-10">
       {isLoading ? (
-        <div className="flex justify-center items-center h-screen">
+        <div className="flex justify-center items-center h-64">
           <Spinner />
         </div>
       ) : (
@@ -76,14 +77,7 @@ export default function UserInfo({ session }: UserInfoProps) {
             <p className="text-gray-600 dark:text-gray-300 text-center">
               {publicAddress}
             </p>
-            <form action={handleSignOut} className="w-full">
-              <button
-                type="submit"
-                className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300"
-              >
-                Sign Out
-              </button>
-            </form>
+            <SignOut />
           </div>
         )
       )}
