@@ -5,7 +5,7 @@ import { Session } from "next-auth";
 
 import { web3auth, decodeToken } from "@/lib/web3auth";
 import { useEffect, useState } from "react";
-import Spinner from "@/components/spinner";
+import Loading from "@/components/loading";
 import SignOut from "@/components/auth/signout-button";
 
 type UserInfoProps = {
@@ -54,7 +54,7 @@ export default function UserInfo({ session }: UserInfoProps) {
     <div className="bg-white dark:bg-zinc-800/30 shadow-lg rounded-lg p-8 max-w-md w-full mx-auto mt-10">
       {isLoading ? (
         <div className="flex justify-center items-center h-64">
-          <Spinner />
+          <Loading />
         </div>
       ) : (
         publicAddress && (
