@@ -34,7 +34,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      session.idToken = token.idToken as string | undefined;
+      session.idToken = token.idToken as string;
       return session;
     },
   },
