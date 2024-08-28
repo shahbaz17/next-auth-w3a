@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { Session } from "next-auth";
+import { useEffect, useState } from "react";
 
 import { web3auth, decodeToken } from "@/lib/web3auth";
-import { useEffect, useState } from "react";
 import Loading from "@/components/loading";
 import SignOut from "@/components/auth/signout-button";
 
@@ -15,38 +15,44 @@ type UserInfoProps = {
 export default function UserInfo({ session }: UserInfoProps) {
   const [provider, setProvider] = useState<any>(null);
   const [publicAddress, setPublicAddress] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const init = async () => {
-      if (web3auth.status === "not_ready") {
-        setIsLoading(true);
-        await web3auth.init();
-      }
-      if (web3auth.status === "connected") {
-        setIsLoading(true);
-        const provider = web3auth.provider;
-        setProvider(provider);
-        const publicAddress = await provider?.request({
-          method: "eth_accounts",
-        });
-        setPublicAddress(publicAddress as string);
-        setIsLoading(false);
-      } else {
-        setIsLoading(true);
-        if (!session?.idToken) return;
-        const { payload } = decodeToken(session.idToken);
-        const provider = await web3auth.connect({
-          verifier: "next-auth-w3a",
-          verifierId: (payload as any).email,
-          idToken: session.idToken,
-        });
-        setProvider(provider);
+      try {
+        if (web3auth.status === "not_ready") {
+          await web3auth.init();
+        }
+
+        if (web3auth.status === "connected") {
+          const provider = web3auth.provider;
+          setProvider(provider);
+          const accounts = await provider?.request({ method: "eth_accounts" });
+          if (accounts && (accounts as any).length > 0) {
+            setPublicAddress((accounts as any)[0]);
+          }
+        } else if (session?.idToken) {
+          const { payload } = decodeToken(session.idToken);
+          const provider = await web3auth.connect({
+            verifier: "next-auth-w3a",
+            verifierId: (payload as any).email,
+            idToken: session.idToken,
+          });
+          setProvider(provider);
+        }
+      } catch (error) {
+        console.error("Error initializing & connecting to web3auth:", error);
+        setProvider(null);
+        setPublicAddress(null);
+      } finally {
         setIsLoading(false);
       }
     };
-    init();
-  }, [session, provider]);
+
+    if (session) {
+      init();
+    }
+  }, [session]);
 
   if (!session) return null;
 
@@ -66,6 +72,7 @@ export default function UserInfo({ session }: UserInfoProps) {
                 width={140}
                 height={140}
                 className="rounded-full border-4 border-blue-500"
+                priority
               />
             )}
             <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
