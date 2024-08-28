@@ -1,6 +1,6 @@
 import { handleSignOut } from "@/actions";
 
-export default function SignIn() {
+export default function SignOut() {
   return (
     <form
       action={async () => {
