@@ -19,7 +19,7 @@ export default function UserInfo({ session }: UserInfoProps) {
 
   useEffect(() => {
     const init = async () => {
-      if (web3auth.status !== "connected" && !provider) {
+      if (web3auth.status === "not_ready") {
         setIsLoading(true);
         await web3auth.init();
       }

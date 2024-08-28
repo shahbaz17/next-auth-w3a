@@ -1,11 +1,11 @@
-import { signIn } from "@/auth";
+import { handleSignIn } from "@/actions";
 
 export default function SignIn() {
   return (
     <form
       action={async () => {
         "use server";
-        await signIn("google");
+        await handleSignIn();
       }}
       className="flex justify-center items-center h-32 mt-16"
     >
